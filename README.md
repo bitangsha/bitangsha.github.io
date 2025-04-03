@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English to Bengali Dictionary</title>
+    <title>English Dictionary</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,8 +24,14 @@
     </style>
 </head>
 <body>
-    <h1>English to Bengali Dictionary</h1>
+    <h1>English Dictionary</h1>
     <input type="text" id="word" placeholder="Enter a word">
+    <div>
+        <input type="radio" id="en" name="language" value="en" checked>
+        <label for="en">English</label>
+        <input type="radio" id="bn" name="language" value="bn">
+        <label for="bn">Bengali</label>
+    </div>
     <button onclick="getDefinition()">Search</button>
     <div id="result"></div>
 
@@ -32,12 +39,15 @@
         async function getDefinition() {
             const word = document.getElementById('word').value;
             const resultDiv = document.getElementById('result');
+            const selectedLang = document.querySelector('input[name="language"]:checked').value;
             resultDiv.innerHTML = "Loading...";
 
+            let langPair = selectedLang === 'bn' ? 'en|bn' : 'en|en';
+            
             try {
-                const response = await fetch(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|bn`);
+                const response = await fetch(`https://api.mymemory.translated.net/get?q=${word}&langpair=${langPair}`);
                 const data = await response.json();
-
+                
                 if (data.responseData.translatedText) {
                     resultDiv.innerHTML = `<h2>${word}</h2><p>${data.responseData.translatedText}</p>`;
                 } else {
